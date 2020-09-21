@@ -1,17 +1,15 @@
 package com.company;
 
-import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
         Bot bot = new Bot();
-        Scanner scan = new Scanner(System.in);
+        SysIO inputOutput = new SysIO();
 
         while (true){
-            var response = bot.messageHandler(scan.nextLine());
+            var response = bot.messageHandler(inputOutput.Input());
             if (Boolean.parseBoolean(response))break;
-            else System.out.println(response);
+            else inputOutput.Output(response);
         }
     }
 }
