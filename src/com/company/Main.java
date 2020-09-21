@@ -11,7 +11,7 @@ public class Main {
         while (true){
             var response = bot.messageHandler(scan.nextLine());
             if (Boolean.parseBoolean(response))break;
-            else System.out.println(Boolean.parseBoolean(response));
+            else System.out.println(response);
         }
     }
 }
