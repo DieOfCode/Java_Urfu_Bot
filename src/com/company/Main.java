@@ -7,8 +7,9 @@ public class Main {
         SysIO inputOutput = new SysIO();
 
         while (true){
-            var response = bot.messageHandler(inputOutput.Input());
-            if (Boolean.parseBoolean(response))break;
+            String message = inputOutput.Input();
+            var response = bot.reply(message);
+            if (message.equals("Конец"))break;
             else inputOutput.Output(response);
         }
     }
