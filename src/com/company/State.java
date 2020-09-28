@@ -1,12 +1,13 @@
 package com.company;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 public class State {
-    BotStack<String> listOfCommand = new BotStack<String>();
+    BotStack<HashMap<String,String>> listOfCommand = new BotStack<>();
 
     public String getLastCommand(){
-        return listOfCommand.empty() ? "Ничего не происходило" : listOfCommand.lastElement();
+        return listOfCommand.empty() ? "Ничего не происходило" : String.valueOf(listOfCommand.lastElement());
     }
 
 }
