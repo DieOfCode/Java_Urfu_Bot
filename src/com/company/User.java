@@ -2,7 +2,6 @@ package com.company;
 import java.util.HashMap;
 
 public class User {
-    public State UserState = new State();
     public int userId;
     public HashMap<Coordinates, String> infoByCoordinates = new HashMap<>();
     public User(int id) {
@@ -16,4 +15,5 @@ public class User {
     public String getInfo(){
         return infoByCoordinates.toString();
     }
+
 }

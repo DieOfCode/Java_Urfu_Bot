@@ -1,40 +1,30 @@
 package com.company;
 
-import javax.swing.plaf.synth.SynthStyleFactory;
-import java.util.Date;
-import java.util.HashMap;
-
 public class Bot {
-    public User currentUser;
-    private String BotAnswer;
+    private User user;
 
     public Bot(Integer id){
-        currentUser = new User(id);
-        HashMap<Integer, User> users = new HashMap<>();
-        users.put(id, currentUser);
+        user = new User(id);
     }
 
     public String replay(String command){
+        var botAnswer = "";
         switch (command.toLowerCase()){
-            case "привет", "/help"-> {
-                BotAnswer="Привет! Я бот, который сохранит информацию по вашим координатам";
-            }
+            case "привет", "/help"-> botAnswer = "Привет! Я бот, который сохранит информацию по вашим координатам. Мои команды: запиши, покажи";
             case "запиши" -> {
-                currentUser.setInfoByCoordinates(new Coordinates(1, 1), "first page");
-                BotAnswer= new Date().toString();
+                var io = new SysIO();
+                io.Output("Введите сообщение");
+                var message = io.Input();
+                io.Output("Введтите координаты");
+                var coors = io.Input().split(" ");
+                var coordinates = new Coordinates(Double.parseDouble(coors[0]), Double.parseDouble(coors[1]));
+                user.setInfoByCoordinates(coordinates, message);
+                botAnswer = "Сообщение записано";
             }
-            case "покажи"-> {
-                BotAnswer =  currentUser.getInfo();
-            }
-            default-> {
-                BotAnswer= "Спроси: 'Какой день?' ";
-            }
+            case "покажи"-> botAnswer =  user.getInfo();
+            default-> botAnswer = "Напиши /help";
         }
-        currentUser.UserState.listOfCommand.push(new HashMap<>(){{
-            put(command.toLowerCase(),BotAnswer);
-        }});
-        System.out.println(currentUser.UserState.getLastCommand());
-        return BotAnswer;
+        return botAnswer;
 
     }
 }
