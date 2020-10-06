@@ -14,6 +14,6 @@ public class Coordinates {
 
     @Override
     public int hashCode(){
-        return (int)(x * 1000 + y * 1000);
+        return (int)(x * Math.pow(2, 11) + y * Math.pow(2, 10));
     }
 }
