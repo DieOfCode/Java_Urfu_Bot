@@ -4,14 +4,16 @@ import java.util.ArrayList;
 
 public class Bot {
     private User user;
-    public Bot(Integer id){
-        user = new User(id);
+    public Bot(){
+        user = new User();
     }
 
-    public String replay(String command){
+    public String replay(Message inputMessage){
         if (user.getDialogState() == DialogState.INITIAL){
-            switch (command.toLowerCase()){
-                case "привет", "/help"-> {return "Привет! Я бот, который сохранит информацию по вашим координатам. Мои команды: запиши, покажи";}
+            switch (inputMessage.command.toLowerCase()){
+                case "привет", "/help", "/start"-> {
+                    return "Привет! Я бот, который сохранит информацию по вашим координатам. Мои команды: запиши, покажи";
+                }
                 case "запиши" -> {
                     user.setDialogState(DialogState.WAITING_FOR_MESSAGE);
                     return "Введите сообщение";
@@ -22,14 +24,13 @@ public class Bot {
         }
 
         if (user.getDialogState() == DialogState.WAITING_FOR_MESSAGE){
-            user.lastMessage = command;
+            user.lastMessage = inputMessage.command;
             user.setDialogState(DialogState.WAITING_FOR_COORDINATES);
-            return "Введите координаты";
+            return "Отправьте геометку";
         }
 
         if (user.getDialogState() == DialogState.WAITING_FOR_COORDINATES){
-            var coors = command.split(" ");
-            var coordinates = new Coordinates(Double.parseDouble(coors[0]), Double.parseDouble(coors[1]));
+            var coordinates = inputMessage.coordinates;
             user.setInfoByCoordinates(coordinates, user.lastMessage);
             user.setDialogState(DialogState.INITIAL);
             return "Сообщение записано";

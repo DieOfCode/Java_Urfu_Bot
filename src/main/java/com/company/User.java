@@ -3,12 +3,10 @@ import java.util.HashMap;
 
 public class User {
     private DialogState dialogState;
-    public int userId;
     public String lastMessage;
     public HashMap<Coordinates, String> infoByCoordinates = new HashMap<>();
-    public User(int id) {
+    public User() {
         lastMessage = "";
-        userId = id;
         dialogState = DialogState.INITIAL;
     }
 
