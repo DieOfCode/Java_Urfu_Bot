@@ -7,12 +7,14 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.lang.reflect.Type;
+
 
 public class TeleBot extends TelegramLongPollingBot {
     public BotsHandler botsHandler = new BotsHandler();
+    public BotKeyboard markupKeyboard = new BotKeyboard();
+
     public static void main(String[] args) {
-        {ApiContextInitializer.init();}
+        { ApiContextInitializer.init();}
         TelegramBotsApi botapi = new TelegramBotsApi();
         try {
             botapi.registerBot(new TeleBot());
@@ -26,6 +28,8 @@ public class TeleBot extends TelegramLongPollingBot {
         var bot = botsHandler.getBot(update.getMessage().getChatId());
         var inputMessage = new Message(update.getMessage());
         sendMessage.setChatId(update.getMessage().getChatId());
+        markupKeyboard.getKeyboard(inputMessage);
+        sendMessage.setReplyMarkup(markupKeyboard);
         sendMessage.setText(bot.replay(inputMessage));
         try {
             execute(sendMessage);
@@ -33,6 +37,8 @@ public class TeleBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+
+
 
     public String getBotUsername() {
         return "geo";
