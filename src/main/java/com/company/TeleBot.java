@@ -44,6 +44,6 @@ public class TeleBot extends TelegramLongPollingBot {
     }
 
     public String getBotToken() {
-        return "1349695017:AAHcTSpiqvHsrdMMKiicvCjjIh_zm7U-x0c";
+        return "";
     }
 }
