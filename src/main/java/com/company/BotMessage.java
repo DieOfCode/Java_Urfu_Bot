@@ -1,11 +1,10 @@
 package com.company;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
-import javax.validation.constraints.Null;
-
-public class Message {
+public class BotMessage {
     public Coordinates coordinates = null;
     public String command = null;
-    public Message(org.telegram.telegrambots.meta.api.objects.Message inputMessage){
+    public BotMessage(Message inputMessage){
         if (inputMessage.getLocation() != null){
             coordinates = new Coordinates(inputMessage.getLocation().getLatitude().doubleValue(),
                                           inputMessage.getLocation().getLongitude().doubleValue()
