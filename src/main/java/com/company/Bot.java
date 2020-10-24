@@ -1,7 +1,7 @@
 package com.company;
 
 public class Bot {
-    private User user;
+    private final User user;
     public Bot(){
         user = new User();
     }
@@ -16,7 +16,11 @@ public class Bot {
                     user.setDialogState(DialogState.WAITING_FOR_MESSAGE);
                     return "Введите сообщение";
                 }
-                case "покажи"-> {return user.getInfo();}
+                case "покажи" -> {return user.getInfo();}
+                case "прими" -> {
+                    user.setDialogState(DialogState.RECEIVE_CUR_LOCATION);
+                    return "готов";
+                }
                 default -> {return "Напиши /help";}
             }
         }
@@ -32,6 +36,11 @@ public class Bot {
             user.setInfoByCoordinates(coordinates, user.lastMessage);
             user.setDialogState(DialogState.INITIAL);
             return "Сообщение записано";
+        }
+
+        if (user.getDialogState() == DialogState.RECEIVE_CUR_LOCATION){
+            var currentCoors = inputBotMessage.coordinates;
+            return currentCoors.toString();
         }
         return "Напиши /help";
     }

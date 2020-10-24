@@ -4,6 +4,7 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 
 
 public class TeleBot extends TelegramLongPollingBot {
-    private static Logger logger = Logger.getLogger(TeleBot.class.getName());
+    private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
     public BotsHandler botsHandler = new BotsHandler();
     public static void main(String[] args) throws TelegramApiRequestException, IOException {
         LogManager.getLogManager().readConfiguration();
@@ -23,15 +24,23 @@ public class TeleBot extends TelegramLongPollingBot {
         botapi.registerBot(new TeleBot());
     }
 
-    public void a(){throw new NullPointerException();}
 
     public void onUpdateReceived(Update update) {
         try {
-            a();
             var sendMessage = new SendMessage();
-            var bot = botsHandler.getBot(update.getMessage().getChatId());
-            var inputMessage = new BotMessage(update.getMessage());
-            sendMessage.setChatId(update.getMessage().getChatId());
+            logger.info(update.toString());
+            Bot bot;
+            BotMessage inputMessage;
+            Message currentMessage;
+            if (update.getMessage() != null){
+                currentMessage = update.getMessage();
+            }
+            else {
+                currentMessage = update.getEditedMessage();
+            }
+            bot = botsHandler.getBot(currentMessage.getChatId());
+            inputMessage = new BotMessage(currentMessage);
+            sendMessage.setChatId(currentMessage.getChatId());
             sendMessage.setText(bot.replay(inputMessage));
             execute(sendMessage);
         } catch (Exception e) {
@@ -44,6 +53,7 @@ public class TeleBot extends TelegramLongPollingBot {
     }
 
     public String getBotToken() {
-        return "";
+        var env = System.getenv();
+        return env.get("token");
     }
 }
