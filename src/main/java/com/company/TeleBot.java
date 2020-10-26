@@ -40,6 +40,7 @@ public class TeleBot extends TelegramLongPollingBot {
             }
             bot = botsHandler.getBot(currentMessage.getChatId());
             inputMessage = new BotMessage(currentMessage);
+            inputMessage.isEdited = update.getMessage() == null;
             sendMessage.setChatId(currentMessage.getChatId());
             sendMessage.setText(bot.replay(inputMessage));
             execute(sendMessage);

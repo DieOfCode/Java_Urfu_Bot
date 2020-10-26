@@ -7,7 +7,7 @@ public class Bot {
     }
 
     public String replay(BotMessage inputBotMessage){
-        if (user.getDialogState() == DialogState.INITIAL){
+        if (user.getDialogState() == DialogState.INITIAL && !inputBotMessage.isEdited){
             switch (inputBotMessage.command.toLowerCase()){
                 case "привет", "/help", "/start"-> {
                     return "Привет! Я бот, который сохранит информацию по вашим координатам. Мои команды: запиши, покажи";
@@ -25,6 +25,10 @@ public class Bot {
             }
         }
 
+        if (user.getDialogState() == DialogState.INITIAL && inputBotMessage.isEdited){
+            user.setDialogState(DialogState.RECEIVE_CUR_LOCATION);
+        }
+
         if (user.getDialogState() == DialogState.WAITING_FOR_MESSAGE){
             user.lastMessage = inputBotMessage.command;
             user.setDialogState(DialogState.WAITING_FOR_COORDINATES);
@@ -40,6 +44,7 @@ public class Bot {
 
         if (user.getDialogState() == DialogState.RECEIVE_CUR_LOCATION){
             var currentCoors = inputBotMessage.coordinates;
+            user.setDialogState(DialogState.INITIAL);
             return currentCoors.toString();
         }
         return "Напиши /help";
