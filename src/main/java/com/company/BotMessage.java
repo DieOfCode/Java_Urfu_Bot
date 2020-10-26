@@ -11,7 +11,9 @@ public class BotMessage {
             );
         }
         else {
-           command = inputMessage.getText();
+            if (inputMessage.getText() != null) {
+                command = inputMessage.getText();
+            }
         }
     }
 }
