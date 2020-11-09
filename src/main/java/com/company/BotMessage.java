@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class BotMessage {
     public Coordinates coordinates = null;
     public Boolean isEdited = false;
-    public String command = null;
+    public String command;
     public Long chatID;
     public Integer messageID;
     public BotMessage(Message inputMessage){

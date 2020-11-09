@@ -17,7 +17,10 @@ public class Task {
         this.distanceForOffset = distanceForOffset;
         this.taskAnswer = taskAnswer;
         this.serialNumber = serialNumber;
+    }
 
+    public Boolean checkAnswer(String answer){
+        return answer.equals(taskAnswer);
     }
 
 }

@@ -14,9 +14,10 @@ public class User {
     public String broadcastingMessage;
     public Boolean broadcasting ;
     public Quest currentQuest = Quest.questDeserializer();
-    public Integer skippedTask=0;
-    public Integer answeredTask=0;
+    public Integer skippedTask = 0;
+    public Integer answeredTask = 0;
     public Integer taskEnd = skippedTask+answeredTask;
+    public Integer currentTaskNumber = 1;
 
     public User() {
         lastMessage = "";
@@ -24,6 +25,15 @@ public class User {
         dialogState = DialogState.INITIAL;
         broadcasting = false;
 
+    }
+
+    public Task getCurrentTask(){
+        for (Task task:currentQuest.allTask){
+            if (task.serialNumber.equals(currentTaskNumber)) {
+                return task;
+            }
+        }
+        return null;
     }
 
     public void setInfoByCoordinates(Coordinates coors, String info){
@@ -60,9 +70,6 @@ public class User {
 enum DialogState{
     INITIAL,
     GIVE_ANSWER,
-    RECEIVE_CUR_LOCATION,
     TASK_START,
-    CHOICE_ACTION,
-    WAIT_TIME
-
+    CHOICE_ACTION
 }

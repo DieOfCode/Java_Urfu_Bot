@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 public class TeleBot extends TelegramLongPollingBot {
     private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
     public BotsHandler botsHandler = new BotsHandler();
-    public Integer preparedForKill;
     public static void main(String[] args) throws TelegramApiRequestException, IOException {
         LogManager.getLogManager().readConfiguration();
         ApiContextInitializer.init();
@@ -48,12 +47,6 @@ public class TeleBot extends TelegramLongPollingBot {
             sendLocation.setChatId(currentMessage.getChatId());
             var message = bot.replay(inputMessage);
 
-
-//            if (message.toLowerCase().equals("kill")){
-//                deleteMessage.setChatId(currentMessage.getChatId());
-//                deleteMessage.setMessageId(preparedForKill);
-//                execute(deleteMessage);
-//            }
             for (String msg:message.messages){
                 sendMessage.setText(msg);
                 execute(sendMessage);
@@ -74,7 +67,7 @@ public class TeleBot extends TelegramLongPollingBot {
     }
 
     public String getBotToken() {
-//        var env = System.getenv();
-        return "1349695017:AAHcTSpiqvHsrdMMKiicvCjjIh_zm7U-x0c";
+        var env = System.getenv();
+        return env.get("token");
     }
 }

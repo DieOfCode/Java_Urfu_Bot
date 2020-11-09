@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class Bot {
     public final User user;
+    private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
 
     public Bot(){
         user = new User();
@@ -14,8 +16,8 @@ public class Bot {
 
     public BotAnswer replay(BotMessage inputBotMessage){
         var messageList = new ArrayList<String>();
-        System.out.println(inputBotMessage.command);
-        if (user.getDialogState() == DialogState.INITIAL && !inputBotMessage.isEdited){
+        logger.info(inputBotMessage.command);
+        if (user.getDialogState() == DialogState.INITIAL){
             switch (inputBotMessage.command.toLowerCase()){
                 case "привет", "/help", "/start"-> {
                     messageList.add("Привет! Я квестовый бот");
@@ -31,29 +33,20 @@ public class Bot {
                     messageList.add(user.currentQuest.questDescription);
                     return new BotAnswer(messageList, false);
                 }
-//                case "прими" -> {
-//                    user.setDialogState(DialogState.RECEIVE_CUR_LOCATION);
-//                    return "готов";
-//                }
-//                case "создать" ->{return "create";}
-//                case "стоп" ->{return "kill";}
+
                 default -> {
                     messageList.add("Напиши /help");
                     return new BotAnswer(messageList, false);
                 }
             }
         }
-//        if(inputBotMessage.coordinates!=null && inputBotMessage.isEdited)
-//        {
-//            messageList.add(inputBotMessage.coordinates.toString());
-//            return inputBotMessage.coordinates.toString();//вот здесь надо как-то обрабатывать трансляцию
-//        }
-//        if (user.getDialogState() == DialogState.START_QUEST){
-//            user.setDialogState(DialogState.TASK_START);
-//            return "Местоположение вашего задания";
 
-//        }
         if (user.getDialogState()== DialogState.TASK_START){
+            if (inputBotMessage.command.toLowerCase().equals("инфо")){
+                messageList.add(user.getCurrentTask().taskDescription);
+                messageList.add("Местоположение задания");
+                return new BotAnswer(messageList, true);
+            }
             if (inputBotMessage.coordinates != null){
                 if (user.currentQuest.allTask.get(user.taskEnd).distanceForOffset > Distance.getDistance(inputBotMessage.coordinates, user.currentQuest.allTask.get(user.taskEnd).taskLocation).intValue()){
                     var coordinates = inputBotMessage.coordinates;
@@ -66,21 +59,15 @@ public class Bot {
                         .getDistance(inputBotMessage.coordinates, user.currentQuest.allTask.get(user.taskEnd).taskLocation)
                         .intValue()));
                 return new BotAnswer(messageList, false);
-//                return messageFormat
-//                        .format("Расстояние до точки %d", Distance
-//                                .getDistance(inputBotMessage.coordinates, user.currentQuest.allTask.get(user.taskEnd).taskLocation)
-//                                .intValue()).toString();
             }
         }
 
         if (user.getDialogState() == DialogState.CHOICE_ACTION){
-
             switch (inputBotMessage.command.toLowerCase()){
                 case "ответить"-> {
                     user.setDialogState(DialogState.GIVE_ANSWER);
                     messageList.add(String.format("Напомню вопрос %s", user.currentQuest.allTask.get(user.taskEnd).taskDescription));
                     return new BotAnswer(messageList, false);
-//                   return messageFormat.format("Напомню вопрос %s",user.currentQuest.allTask.get(user.taskEnd).taskDescription).toString();
                 }
                 case "пропустить" ->{
                     user.setDialogState(DialogState.TASK_START);
@@ -97,9 +84,21 @@ public class Bot {
         }
 
         if(user.getDialogState()==DialogState.GIVE_ANSWER){
-            user.answeredTask+=1;
-            messageList.add("Перейдем к след заданию");
-            user.setDialogState(DialogState.TASK_START);
+            var curTask = user.getCurrentTask();
+            if (curTask.checkAnswer(inputBotMessage.command)){
+                user.answeredTask += 1;
+                user.currentTaskNumber += 1;
+                if (user.getCurrentTask() == null){
+                    messageList.add("Квест закончен");
+                    user.setDialogState(DialogState.INITIAL);
+                    return new BotAnswer(messageList, false);
+                }
+                messageList.add("Перейдем к след заданию");
+                user.setDialogState(DialogState.TASK_START);
+                return new BotAnswer(messageList, false);
+            }
+
+            messageList.add("Попробуй еще раз");
             return new BotAnswer(messageList, false);
         }
         messageList.add("Напиши /help");
