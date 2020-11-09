@@ -8,8 +8,20 @@ public class Coordinates {
         this.y = y;
     }
 
+    public Coordinates() {
+        super();
+    }
+
+    public Double getX() {
+        return x;
+    }
+
+    public Double getY() {
+        return y;
+    }
+
     public String toString(){
-        return String.format("(%f, %f)", x, y);
+        return String.format("%f, %f", x, y);
     }
 
     @Override

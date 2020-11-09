@@ -3,6 +3,8 @@ package com.company;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.StopMessageLiveLocation;
+import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,6 +19,7 @@ import java.util.logging.Logger;
 public class TeleBot extends TelegramLongPollingBot {
     private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
     public BotsHandler botsHandler = new BotsHandler();
+    public Integer preparedForKill;
     public static void main(String[] args) throws TelegramApiRequestException, IOException {
         LogManager.getLogManager().readConfiguration();
         ApiContextInitializer.init();
@@ -28,6 +31,7 @@ public class TeleBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             var sendMessage = new SendMessage();
+            var sendLocation = new SendLocation();
             logger.info(update.toString());
             Bot bot;
             BotMessage inputMessage;
@@ -40,21 +44,37 @@ public class TeleBot extends TelegramLongPollingBot {
             }
             bot = botsHandler.getBot(currentMessage.getChatId());
             inputMessage = new BotMessage(currentMessage);
-            inputMessage.isEdited = update.getMessage() == null;
             sendMessage.setChatId(currentMessage.getChatId());
-            sendMessage.setText(bot.replay(inputMessage));
-            execute(sendMessage);
+            sendLocation.setChatId(currentMessage.getChatId());
+            var message = bot.replay(inputMessage);
+
+
+//            if (message.toLowerCase().equals("kill")){
+//                deleteMessage.setChatId(currentMessage.getChatId());
+//                deleteMessage.setMessageId(preparedForKill);
+//                execute(deleteMessage);
+//            }
+            for (String msg:message.messages){
+                sendMessage.setText(msg);
+                execute(sendMessage);
+            }
+            if(message.needLocation){
+                sendLocation.setLongitude(bot.user.currentQuest.allTask.get(bot.user.taskEnd).taskLocation.y.floatValue());
+                sendLocation.setLatitude(bot.user.currentQuest.allTask.get(bot.user.taskEnd).taskLocation.x.floatValue());
+                execute(sendLocation);
+            }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Exception", e);
         }
     }
+
 
     public String getBotUsername() {
         return "geo";
     }
 
     public String getBotToken() {
-        var env = System.getenv();
-        return env.get("token");
+//        var env = System.getenv();
+        return "1349695017:AAHcTSpiqvHsrdMMKiicvCjjIh_zm7U-x0c";
     }
 }

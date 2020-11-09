@@ -1,0 +1,14 @@
+{
+  "allTask" : [ {
+    "taskDescription" : "Simple Task",
+    "taskLocation" : {
+      "x" : 56.86000039,
+      "y" : 60.61708152
+    },
+    "distanceForOffset" : 100,
+    "taskAnswer" : "Yes",
+    "serialNumber" : 5
+  } ],
+  "name" : "test",
+  "questDescription" : "SimpleQuest"
+}
