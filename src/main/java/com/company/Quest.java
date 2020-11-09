@@ -9,8 +9,11 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Quest {
+    private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
     public List<Task> allTask;
     public String name;
 
@@ -30,7 +33,7 @@ public class Quest {
         try {
             return objectMapper.readValue(new File("some_files.json"), Quest.class);
         } catch (IOException e) {
-            System.out.println(e);
+            logger.log(Level.SEVERE, "Exception", e);
         }
         return null;
     }
@@ -39,8 +42,8 @@ public class Quest {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
             mapper.writeValue(new File("some_files.json"),quest );
-        } catch(IOException exc) {
-            exc.printStackTrace();
+        } catch(IOException e) {
+            logger.log(Level.SEVERE, "Exception", e);
         }
     }
 }

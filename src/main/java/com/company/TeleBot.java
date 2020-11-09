@@ -3,7 +3,6 @@ package com.company;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.StopMessageLiveLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,8 +21,8 @@ public class TeleBot extends TelegramLongPollingBot {
     public static void main(String[] args) throws TelegramApiRequestException, IOException {
         LogManager.getLogManager().readConfiguration();
         ApiContextInitializer.init();
-        TelegramBotsApi botapi = new TelegramBotsApi();
-        botapi.registerBot(new TeleBot());
+        var botApi = new TelegramBotsApi();
+        botApi.registerBot(new TeleBot());
     }
 
 
@@ -47,13 +46,13 @@ public class TeleBot extends TelegramLongPollingBot {
             sendLocation.setChatId(currentMessage.getChatId());
             var message = bot.replay(inputMessage);
 
-            for (String msg:message.messages){
+            for (String msg:message.messages) {
                 sendMessage.setText(msg);
                 execute(sendMessage);
             }
-            if(message.needLocation){
-                sendLocation.setLongitude(bot.user.currentQuest.allTask.get(bot.user.taskEnd).taskLocation.y.floatValue());
-                sendLocation.setLatitude(bot.user.currentQuest.allTask.get(bot.user.taskEnd).taskLocation.x.floatValue());
+            if (message.needLocation) {
+                sendLocation.setLongitude(bot.user.currentQuest.allTask.get(bot.user.currentTaskNumber).taskLocation.y.floatValue());
+                sendLocation.setLatitude(bot.user.currentQuest.allTask.get(bot.user.currentTaskNumber).taskLocation.x.floatValue());
                 execute(sendLocation);
             }
         } catch (Exception e) {

@@ -22,5 +22,4 @@ public class Task {
     public Boolean checkAnswer(String answer){
         return answer.equals(taskAnswer);
     }
-
 }
