@@ -6,38 +6,37 @@ import java.util.HashMap;
 public class User {
     private DialogState dialogState;
     public HashMap<Coordinates, String> infoByCoordinates = new HashMap<>();
-    public Quest currentQuest = Quest.questDeserializer();
     private Integer skippedTask = 0;
     private Integer answeredTask = 0;
     private Integer taskEnd = 0;
-    public Integer currentTaskNumber = 1;
+    public Integer currentTaskIndex = 0;
     public ArrayList<Task> doneTasks = new ArrayList<>();
 
     public User() {
         dialogState = DialogState.INITIAL;
     }
 
-    public Task getCurrentTask(){
+    public Task getCurrentTask(Quest currentQuest){
         for (Task task:currentQuest.allTask){
-            if (task.serialNumber.equals(currentTaskNumber)) {
+            if (task.serialNumber.equals(currentTaskIndex + 1)) {
                 return task;
             }
         }
         return null;
     }
 
-    public void updateTasksInfo(Boolean isSkipped){
+    public void updateTasksInfo(Boolean isSkipped, Quest currentQuest){
         if (isSkipped) {
             skippedTask += 1;
         } else {
             answeredTask += 1;
         }
-        doneTasks.add(getCurrentTask());
+        doneTasks.add(getCurrentTask(currentQuest));
         taskEnd += 1;
-        currentTaskNumber += 1;
+        currentTaskIndex += 1;
     }
 
-    public String getQuestInfo(){
+    public String getQuestInfo(Quest currentQuest){
         return String.format("Пропущено: %d \nВыполнено: %d \nОсталось: %d",
                 skippedTask, answeredTask, currentQuest.allTask.size());
     }

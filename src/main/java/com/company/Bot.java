@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Bot {
+    public Quest quest;
     public final User user;
     private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
 
-    public Bot(){
+    public Bot(Quest quest){
+        this.quest = quest;
         user = new User();
     }
 
@@ -27,7 +29,7 @@ public class Bot {
                     return new BotAnswer(messageList, true);
                 }
                 case "информация о квесте" -> {
-                    messageList.add(user.currentQuest.questDescription);
+                    messageList.add(quest.questDescription);
                     return new BotAnswer(messageList, false);
                 }
 
@@ -40,19 +42,19 @@ public class Bot {
 
         if (user.getDialogState()== DialogState.TASK_START){
             if (inputBotMessage.command.toLowerCase().equals("инфо")){
-                messageList.add(user.getCurrentTask().taskDescription);
+                messageList.add(user.getCurrentTask(quest).taskDescription);
                 messageList.add("Местоположение задания");
                 return new BotAnswer(messageList, true);
             }
             if (inputBotMessage.command.toLowerCase().equals("квест инфо")){
-                messageList.add(user.getQuestInfo());
+                messageList.add(user.getQuestInfo(quest));
                 return new BotAnswer(messageList, false);
             }
 
             if (inputBotMessage.coordinates != null){
                 var curDistance = Distance.getDistance(inputBotMessage.coordinates,
-                        user.currentQuest.allTask.get(user.currentTaskNumber).taskLocation).intValue();
-                var offset = user.currentQuest.allTask.get(user.currentTaskNumber).distanceForOffset;
+                        quest.allTask.get(user.currentTaskIndex).taskLocation).intValue();
+                var offset = quest.allTask.get(user.currentTaskIndex).distanceForOffset;
                 if (offset > curDistance){
                     user.setDialogState(DialogState.CHOICE_ACTION);
                     messageList.add("Вы подошли к месту выполнения задания\nВы готовы дать ответ или пропустите?" +
@@ -71,13 +73,13 @@ public class Bot {
             switch (inputBotMessage.command.toLowerCase()){
                 case "ответить"-> {
                     user.setDialogState(DialogState.GIVE_ANSWER);
-                    messageList.add(String.format("Напомню вопрос %s",
-                            user.currentQuest.allTask.get(user.currentTaskNumber).taskDescription));
+                    messageList.add(String.format("Внимание, вопрос: %s",
+                            quest.allTask.get(user.currentTaskIndex).taskDescription));
                     return new BotAnswer(messageList, false);
                 }
                 case "пропустить" ->{
                     user.setDialogState(DialogState.TASK_START);
-                    user.updateTasksInfo(true);
+                    user.updateTasksInfo(true, quest);
                     messageList.add("Не печалься, это был сложный вопрос");
                     messageList.add("Перейдем к следующему заданию");
                     return new BotAnswer(messageList, false);
@@ -90,10 +92,10 @@ public class Bot {
         }
 
         if(user.getDialogState()==DialogState.GIVE_ANSWER){
-            var curTask = user.getCurrentTask();
+            var curTask = user.getCurrentTask(quest);
             if (curTask.checkAnswer(inputBotMessage.command)){
-                user.updateTasksInfo(false);
-                if (user.getCurrentTask() == null){
+                user.updateTasksInfo(false, quest);
+                if (user.getCurrentTask(quest) == null){
                     messageList.add("Квест закончен");
                     user.setDialogState(DialogState.INITIAL);
                     return new BotAnswer(messageList, false);

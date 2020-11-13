@@ -31,7 +31,7 @@ public class Quest {
         module.addDeserializer(Quest.class,new ProgramDeserializer());
         objectMapper.registerModule(module);
         try {
-            return objectMapper.readValue(new File("some_files.json"), Quest.class);
+            return objectMapper.readValue(new File("quest.json"), Quest.class);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Exception", e);
         }
@@ -41,7 +41,7 @@ public class Quest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
-            mapper.writeValue(new File("some_files.json"),quest );
+            mapper.writeValue(new File("quest.json"),quest );
         } catch(IOException e) {
             logger.log(Level.SEVERE, "Exception", e);
         }
