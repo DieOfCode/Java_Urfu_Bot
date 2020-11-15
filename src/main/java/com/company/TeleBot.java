@@ -24,7 +24,8 @@ public class TeleBot extends TelegramLongPollingBot {
         ApiContextInitializer.init();
         var botApi = new TelegramBotsApi();
         botApi.registerBot(new TeleBot());
-    }
+
+   }
 
 
     public void onUpdateReceived(Update update) {
@@ -60,7 +61,6 @@ public class TeleBot extends TelegramLongPollingBot {
             logger.log(Level.SEVERE, "Exception", e);
         }
     }
-
 
     public String getBotUsername() {
         return "geo";
