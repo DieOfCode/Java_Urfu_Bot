@@ -1,0 +1,41 @@
+{
+  "allTask" : [ {
+    "name": "Первое задание",
+    "taskDescription" : "Simple Task",
+    "taskLocation" : {
+      "x" : 50.1,
+      "y" : 60.2
+    },
+    "distanceForOffset" : 100,
+    "taskAnswer" : [ "Да", "Нет", "Возможно" ],
+    "serialNumber" : 1,
+    "complete" : false,
+    "tasksForAccess" : []
+  }, {
+    "name": "Второе задание",
+    "taskDescription" : "Simple Task",
+    "taskLocation" : {
+      "x" : 50.1,
+      "y" : 60.2
+    },
+    "distanceForOffset" : 100,
+    "taskAnswer" : [ "Да", "Нет", "Возможно" ],
+    "serialNumber" : 2,
+    "complete" : false,
+    "tasksForAccess" : [1]
+  }, {
+    "name": "Третье задание",
+    "taskDescription" : "Simple Task",
+    "taskLocation" : {
+      "x" : 50.1,
+      "y" : 60.2
+    },
+    "distanceForOffset" : 100,
+    "taskAnswer" : [ "Да", "Нет", "Возможно" ],
+    "serialNumber" : 3,
+    "complete" : false,
+    "tasksForAccess" : [ 1]
+  } ],
+  "name" : "test",
+  "questDescription" : "SimpleQuest"
+}

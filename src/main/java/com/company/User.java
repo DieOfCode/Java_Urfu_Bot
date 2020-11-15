@@ -10,19 +10,31 @@ public class User {
     private Integer answeredTask = 0;
     private Integer taskEnd = 0;
     public Integer currentTaskIndex = 0;
-    public ArrayList<Task> doneTasks = new ArrayList<>();
+//    public ArrayList<Task> doneTasks = new ArrayList<>();
+    public Integer a;
+    public Task currentTask;
+    public ArrayList<Task> availableTask = new ArrayList<>();
+    
 
     public User() {
         dialogState = DialogState.INITIAL;
     }
 
-    public Task getCurrentTask(Quest currentQuest){
+    public Task getCurrentTasks(Quest currentQuest){
         for (Task task:currentQuest.allTask){
-            if (task.serialNumber.equals(currentTaskIndex + 1)) {
+            if (task.serialNumber.equals(currentTaskIndex + 1) && task.tasksForAccess.isEmpty() && !task.complete) {
                 return task;
             }
         }
         return null;
+    }
+    public void getAvailableTasks(Quest currentQuest){
+        for (Task task:currentQuest.allTask){
+            if (task.tasksForAccess.isEmpty() && !task.complete ) {
+                System.out.println(task);
+                availableTask.add(task);
+            }
+        }
     }
 
     public void updateTasksInfo(Boolean isSkipped, Quest currentQuest){
@@ -30,8 +42,12 @@ public class User {
             skippedTask += 1;
         } else {
             answeredTask += 1;
+
         }
-        doneTasks.add(getCurrentTask(currentQuest));
+        availableTask.clear();
+        currentTask.complete = true;
+        currentTask = null;
+        currentQuest.deleteDependency(currentTaskIndex);
         taskEnd += 1;
         currentTaskIndex += 1;
     }
@@ -62,5 +78,7 @@ enum DialogState{
     INITIAL,
     GIVE_ANSWER,
     TASK_START,
-    CHOICE_ACTION
+    CHOICE_ACTION,
+    CHOICE_TASK,
+    SHOW_AVAILABLE_TASK
 }

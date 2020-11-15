@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class TeleBot extends TelegramLongPollingBot {
     private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
-    public Quest quest = Quest.questDeserializer();
+    public Quest quest = Quest.questDeserializer("ProEkaterinburg.json");
     public BotsHandler botsHandler = new BotsHandler(quest);
     public static void main(String[] args) throws TelegramApiRequestException, IOException {
         LogManager.getLogManager().readConfiguration();
@@ -52,8 +52,8 @@ public class TeleBot extends TelegramLongPollingBot {
                 execute(sendMessage);
             }
             if (message.needLocation) {
-                sendLocation.setLongitude(bot.quest.allTask.get(bot.user.currentTaskIndex).taskLocation.y.floatValue());
-                sendLocation.setLatitude(bot.quest.allTask.get(bot.user.currentTaskIndex).taskLocation.x.floatValue());
+                sendLocation.setLongitude(bot.user.currentTask.taskLocation.y.floatValue());
+                sendLocation.setLatitude(bot.user.currentTask.taskLocation.x.floatValue());
                 execute(sendLocation);
             }
         } catch (Exception e) {

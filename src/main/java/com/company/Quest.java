@@ -29,22 +29,29 @@ public class Quest {
         this.name = name;
     }
 
-    public static Quest questDeserializer() {
+    public static Quest questDeserializer(String filename) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(new File("quest.json"), Quest.class);
+            return objectMapper.readValue(new File(filename), Quest.class);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Exception", e);
         }
         return null;
     }
-    public static void questSerializer(Quest quest){
+    public static void questSerializer(Quest quest,String filename){
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
-            mapper.writeValue(new File("quest.json"),quest );
+            mapper.writeValue(new File(filename),quest );
         } catch(IOException e) {
             logger.log(Level.SEVERE, "Exception", e);
+        }
+    }
+    public void deleteDependency(Integer taskIndex){
+        for(Task task:this.allTask){
+            if(task.tasksForAccess.contains(taskIndex)){
+                task.tasksForAccess.remove(task.tasksForAccess.indexOf(taskIndex));
+            }
         }
     }
 }
