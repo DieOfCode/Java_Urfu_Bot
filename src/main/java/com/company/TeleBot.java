@@ -3,48 +3,71 @@ package com.company;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 
 public class TeleBot extends TelegramLongPollingBot {
-    public BotsHandler botsHandler = new BotsHandler();
-    public BotKeyboard markupKeyboard = new BotKeyboard();
+    private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
+    public Quest quest = Quest.questDeserializer("ProEkaterinburg.json");
+    public BotsHandler botsHandler = new BotsHandler(quest);
+    public static void main(String[] args) throws TelegramApiRequestException, IOException {
+        LogManager.getLogManager().readConfiguration();
+        ApiContextInitializer.init();
+        var botApi = new TelegramBotsApi();
+        botApi.registerBot(new TeleBot());
 
-    public static void main(String[] args) {
-        { ApiContextInitializer.init();}
-        TelegramBotsApi botapi = new TelegramBotsApi();
-        try {
-            botapi.registerBot(new TeleBot());
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
+   }
+
 
     public void onUpdateReceived(Update update) {
-        var sendMessage = new SendMessage();
-        var bot = botsHandler.getBot(update.getMessage().getChatId());
-        var inputMessage = new Message(update.getMessage());
-        sendMessage.setChatId(update.getMessage().getChatId());
-        markupKeyboard.getKeyboard(inputMessage);
-        sendMessage.setReplyMarkup(markupKeyboard);
-        sendMessage.setText(bot.replay(inputMessage));
         try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
+            var sendMessage = new SendMessage();
+            var sendLocation = new SendLocation();
+            logger.info(update.toString());
+            Bot bot;
+            BotMessage inputMessage;
+            Message currentMessage;
+            if (update.getMessage() != null){
+                currentMessage = update.getMessage();
+            }
+            else {
+                currentMessage = update.getEditedMessage();
+            }
+            bot = botsHandler.getBot(currentMessage.getChatId());
+            inputMessage = new BotMessage(currentMessage);
+            sendMessage.setChatId(currentMessage.getChatId());
+            sendLocation.setChatId(currentMessage.getChatId());
+            var message = bot.replay(inputMessage);
+
+            for (String msg:message.messages) {
+                sendMessage.setText(msg);
+                execute(sendMessage);
+            }
+            if (message.needLocation) {
+                sendLocation.setLongitude(bot.user.currentTask.taskLocation.y.floatValue());
+                sendLocation.setLatitude(bot.user.currentTask.taskLocation.x.floatValue());
+                execute(sendLocation);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Exception", e);
         }
     }
-
-
 
     public String getBotUsername() {
         return "geo";
     }
 
     public String getBotToken() {
-        return "";
+        var env = System.getenv();
+        return env.get("BOT_KEY");
     }
 }
