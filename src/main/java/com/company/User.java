@@ -8,9 +8,7 @@ public class User {
     public HashMap<Coordinates, String> infoByCoordinates = new HashMap<>();
     private Integer skippedTask = 0;
     private Integer answeredTask = 0;
-    private Integer taskEnd = 0;
     public Integer currentTaskIndex = 0;
-//    public ArrayList<Task> doneTasks = new ArrayList<>();
     public Integer a;
     public Task currentTask;
     public ArrayList<Task> availableTask = new ArrayList<>();
@@ -20,14 +18,6 @@ public class User {
         dialogState = DialogState.INITIAL;
     }
 
-    public Task getCurrentTasks(Quest currentQuest){
-        for (Task task:currentQuest.allTask){
-            if (task.serialNumber.equals(currentTaskIndex + 1) && task.tasksForAccess.isEmpty() && !task.complete) {
-                return task;
-            }
-        }
-        return null;
-    }
     public void getAvailableTasks(Quest currentQuest){
         for (Task task:currentQuest.allTask){
             if (task.tasksForAccess.isEmpty() && !task.complete ) {
@@ -48,7 +38,6 @@ public class User {
         currentTask.complete = true;
         currentTask = null;
         currentQuest.deleteDependency(currentTaskIndex);
-        taskEnd += 1;
         currentTaskIndex += 1;
     }
 
