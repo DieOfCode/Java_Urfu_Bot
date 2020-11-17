@@ -1,41 +1,41 @@
 {
   "allTask" : [ {
-    "name": "Первое задание",
-    "taskDescription" : "Simple Task",
+    "name": "Высоцкий",
+    "taskDescription" : "Сколько этажей в здании?",
     "taskLocation" : {
-      "x" : 50.1,
-      "y" : 60.2
+      "x" : 56.835789,
+      "y" : 60.614578
     },
     "distanceForOffset" : 100,
-    "taskAnswer" : [ "Да", "Нет", "Возможно" ],
+    "taskAnswer" : [ 54,53,52 ],
     "serialNumber" : 1,
     "complete" : false,
     "tasksForAccess" : []
   }, {
-    "name": "Второе задание",
-    "taskDescription" : "Simple Task",
+    "name": "Плотинка",
+    "taskDescription" : "Самое оживлённое место  во время всех праздников в Екатеринбурге.Вопрос: Графити какому исполнителю располагается в переходе под плотинкой?",
     "taskLocation" : {
-      "x" : 50.1,
-      "y" : 60.2
+      "x" : 56.838245,
+      "y" :60.602432
     },
-    "distanceForOffset" : 100,
-    "taskAnswer" : [ "Да", "Нет", "Возможно" ],
+    "distanceForOffset" : 50,
+    "taskAnswer" : ["Цоя","Виктора Цоя","Цой"],
     "serialNumber" : 2,
     "complete" : false,
     "tasksForAccess" : [1]
   }, {
-    "name": "Третье задание",
-    "taskDescription" : "Simple Task",
+    "name": "Дом Севастьянова",
+    "taskDescription" : "исторический памятник Дом Севастья́нова — дворец в Екатеринбурге, одна из местных достопримечательностей, архитектура которой особо выделяется среди особняков города.Чтобы перейти к след заданию напишите в ответе цвет здания",
     "taskLocation" : {
-      "x" : 50.1,
-      "y" : 60.2
+      "x" : 56.839075,
+      "y" :  60.605667
     },
     "distanceForOffset" : 100,
-    "taskAnswer" : [ "Да", "Нет", "Возможно" ],
+    "taskAnswer" : ["зелёный","зелёненький"],
     "serialNumber" : 3,
     "complete" : false,
-    "tasksForAccess" : [ 1]
+    "tasksForAccess" : [1]
   } ],
-  "name" : "test",
-  "questDescription" : "SimpleQuest"
+  "name" : "Про Екатеринбург",
+  "questDescription" : "Проходя этот квест, вы познакомитесь с самыми интересными дстопримечательностями екатеринбурга"
 }
