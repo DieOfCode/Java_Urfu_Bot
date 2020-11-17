@@ -30,9 +30,7 @@ public class Bot {
 
     private BotAnswer showAvailableTask(BotMessage inputBotMessage, ArrayList<String> messageList){
         user.getAvailableTasks(quest);
-        System.out.println(2);
         if(user.availableTask.size() ==1){
-            System.out.println(1);
             user.currentTask= user.availableTask.get(0);
             messageList.add("Задание начинается");
             messageList.add("Местоположение вашего задания");
