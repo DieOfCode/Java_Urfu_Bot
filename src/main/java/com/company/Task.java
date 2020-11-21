@@ -1,8 +1,6 @@
 package com.company;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Task {
     public String name;
@@ -10,8 +8,8 @@ public class Task {
     public Coordinates taskLocation;
     public Integer distanceForOffset;
     public ArrayList<String> taskAnswer;
-    public Integer serialNumber;
-    public Boolean complete=false;
+    public Integer id;
+
     public ArrayList<Integer> tasksForAccess;
 
 
@@ -19,12 +17,12 @@ public class Task {
         super();
     }
 
-    public Task(String taskDescription, Coordinates taskLocation, Integer distanceForOffset, ArrayList<String> taskAnswer, Integer serialNumber,ArrayList<Integer> tasksForAccess) {
+    public Task(String taskDescription, Coordinates taskLocation, Integer distanceForOffset, ArrayList<String> taskAnswer, Integer id, ArrayList<Integer> tasksForAccess) {
         this.taskDescription = taskDescription;
         this.taskLocation = taskLocation;
         this.distanceForOffset = distanceForOffset;
         this.taskAnswer = taskAnswer;
-        this.serialNumber = serialNumber;
+        this.id = id;
         this.tasksForAccess = tasksForAccess;
     }
 

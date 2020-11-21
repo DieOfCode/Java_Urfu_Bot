@@ -8,7 +8,7 @@
     },
     "distanceForOffset" : 100,
     "taskAnswer" : [ "Да", "Нет", "Возможно" ],
-    "serialNumber" : 1,
+    "id": 1,
     "complete" : false,
     "tasksForAccess" : []
   }, {
@@ -20,7 +20,7 @@
     },
     "distanceForOffset" : 100,
     "taskAnswer" : [ "Да", "Нет", "Возможно" ],
-    "serialNumber" : 2,
+    "id": 2,
     "complete" : false,
     "tasksForAccess" : [1]
   }, {
@@ -32,7 +32,7 @@
     },
     "distanceForOffset" : 100,
     "taskAnswer" : [ "Да", "Нет", "Возможно" ],
-    "serialNumber" : 3,
+    "id": 3,
     "complete" : false,
     "tasksForAccess" : [ 1]
   } ],

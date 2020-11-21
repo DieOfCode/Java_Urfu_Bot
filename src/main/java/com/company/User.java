@@ -9,41 +9,49 @@ public class User {
     private Integer skippedTask = 0;
     private Integer answeredTask = 0;
     public Integer currentTaskIndex = 0;
-    public Integer a;
     public Task currentTask;
-    public ArrayList<Task> availableTask = new ArrayList<>();
-    
+    public ArrayList<Integer> completedTasks = new ArrayList<>();
+    public ArrayList<Task> availableTasks = new ArrayList<>();
+    public ArrayList<Task> allTasks;
 
-    public User() {
+
+    public User(Quest quest) {
         dialogState = DialogState.INITIAL;
+        allTasks = new ArrayList<>(quest.allTasks);
     }
 
-    public void getAvailableTasks(Quest currentQuest){
-        for (Task task:currentQuest.allTask){
-            if (task.tasksForAccess.isEmpty() && !task.complete ) {
-                System.out.println(task);
-                availableTask.add(task);
+    public void getAbleTasks(){
+        availableTasks.clear();
+        for (Task task: allTasks){
+            var currentListId = new ArrayList<>(task.tasksForAccess);
+            for (Integer id: completedTasks){
+                if (currentListId.contains(id)){
+                    currentListId.remove(id);
+                }
+            }
+            if (currentListId.isEmpty() && !completedTasks.contains(task.id)){
+                availableTasks.add(task);
             }
         }
     }
 
-    public void updateTasksInfo(Boolean isSkipped, Quest currentQuest){
+    public void updateTasksInfo(Boolean isSkipped){
         if (isSkipped) {
             skippedTask += 1;
         } else {
             answeredTask += 1;
 
         }
-        availableTask.clear();
-        currentTask.complete = true;
-        currentTask = null;
-        currentQuest.deleteDependency(currentTaskIndex);
-        currentTaskIndex += 1;
+        completedTasks.add(currentTask.id);
+        if (currentTaskIndex != allTasks.size() - 1){
+            currentTaskIndex += 1;
+        }
+        currentTask = allTasks.get(currentTaskIndex);
     }
 
     public String getQuestInfo(Quest currentQuest){
         return String.format("Пропущено: %d \nВыполнено: %d \nОсталось: %d",
-                skippedTask, answeredTask, currentQuest.allTask.size());
+                skippedTask, answeredTask, currentQuest.allTasks.size());
     }
 
     public void setInfoByCoordinates(Coordinates coors, String info){

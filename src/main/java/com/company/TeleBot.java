@@ -68,6 +68,6 @@ public class TeleBot extends TelegramLongPollingBot {
 
     public String getBotToken() {
         var env = System.getenv();
-        return "1371151448:AAEdOM0b9JSmte-Q-FA9ZUib2UlBb7OE-t8";
+        return "1349695017:AAHcTSpiqvHsrdMMKiicvCjjIh_zm7U-x0c";
     }
 }

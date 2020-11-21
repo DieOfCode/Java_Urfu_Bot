@@ -12,7 +12,7 @@ public class Bot {
 
     public Bot(Quest quest){
         this.quest = quest;
-        user = new User();
+        user = new User(quest);
     }
 
     public BotAnswer replay(BotMessage inputBotMessage){
@@ -29,47 +29,47 @@ public class Bot {
     }
 
     private BotAnswer showAvailableTask(BotMessage inputBotMessage, ArrayList<String> messageList){
-        user.getAvailableTasks(quest);
-        if(user.availableTask.size() ==1){
-            user.currentTask= user.availableTask.get(0);
+        user.getAbleTasks();
+        if(user.availableTasks.size() ==1){
+            user.currentTask= user.allTasks.get(user.currentTaskIndex);
             messageList.add("Задание начинается");
             messageList.add("Местоположение вашего задания");
             user.setDialogState(TASK_START);
             return new BotAnswer(messageList, true);
         }
-        else if (user.availableTask.size()>1 && user.currentTask ==null){
+        else if (user.availableTasks.size()>1){
             messageList.add("Выберете задание");
-            for(Task task:user.availableTask){
+            for(Task task: user.availableTasks){
                 messageList.add(String.format("Название: %s Номер: %d \n",
-                        task.name, task.serialNumber));
+                        task.name, task.id));
             }
-            messageList.add("Введите нужный номер");
             user.setDialogState(CHOICE_TASK);
         }
         return new BotAnswer(messageList, false);
     }
     private BotAnswer choiceTask(BotMessage inputBotMessage, ArrayList<String> messageList){
-        for(Task task:user.availableTask){
-            System.out.println(task.serialNumber == Integer.parseInt(inputBotMessage.command));
-            if(task.serialNumber == Integer.parseInt(inputBotMessage.command)){
+        logger.info(inputBotMessage.command);
+        for(Task task:user.availableTasks){
+            if(task.id == Integer.parseInt(inputBotMessage.command)){
+                logger.info(task.id.toString());
+                logger.info(task.name);
+                user.currentTaskIndex = task.id - 1;
                 user.currentTask = task;
                 messageList.add("Задание начинается");
                 user.setDialogState(TASK_START);
                 messageList.add("Местоположение вашего задания");
                 return new BotAnswer(messageList, true);
             }
-            else{
-                messageList.add("Что-то пошло не так введите номер задания снова");
-            }
         }
+        messageList.add("Что-то пошло не так");
         return new BotAnswer(messageList, false);
     }
 
     private BotAnswer getAnswer(BotMessage inputBotMessage, ArrayList<String> messageList) {
         var curTask = user.currentTask;
         if (curTask.checkAnswer(inputBotMessage.command)){
-            user.updateTasksInfo(false, quest);
-            if (user.availableTask.isEmpty()){
+            user.updateTasksInfo(false);
+            if (user.completedTasks.size() == user.allTasks.size()){
                 messageList.add("Квест закончен");
                 user.setDialogState(INITIAL);
                 return new BotAnswer(messageList, false);
@@ -88,12 +88,12 @@ public class Bot {
             case "ответить"-> {
                 user.setDialogState(GIVE_ANSWER);
                 messageList.add(String.format("Внимание, вопрос: %s",
-                        quest.allTask.get(user.currentTaskIndex).taskDescription));
+                        quest.allTasks.get(user.currentTaskIndex).taskDescription));
                 return new BotAnswer(messageList, false);
             }
             case "пропустить" ->{
                 user.setDialogState(TASK_START);
-                user.updateTasksInfo(true, quest);
+                user.updateTasksInfo(true);
                 messageList.add("Не печалься, это был сложный вопрос");
                 messageList.add("Перейдем к следующему заданию");
                 return new BotAnswer(messageList, false);
@@ -116,10 +116,14 @@ public class Bot {
             return new BotAnswer(messageList, false);
         }
 
+        if (inputBotMessage.command.toLowerCase().equals("выбор")){
+            return showAvailableTask(inputBotMessage, messageList);
+        }
+
         if (inputBotMessage.coordinates != null){
             var curDistance = Distance.getDistance(inputBotMessage.coordinates,
-                    quest.allTask.get(user.currentTaskIndex).taskLocation).intValue();
-            var offset = quest.allTask.get(user.currentTaskIndex).distanceForOffset;
+                    quest.allTasks.get(user.currentTaskIndex).taskLocation).intValue();
+            var offset = quest.allTasks.get(user.currentTaskIndex).distanceForOffset;
             if (offset > curDistance){
                 user.setDialogState(CHOICE_ACTION);
                 messageList.add("Вы подошли к месту выполнения задания\nВы готовы дать ответ или пропустите?" +
@@ -130,7 +134,7 @@ public class Bot {
             return new BotAnswer(messageList, false);
         }
         messageList.add("Для того чтобы узнать информацию о заданий напишите 'инфо', " +
-                "чтобы узнать расстояние до задания отправьте геопозицию");
+                "чтобы узнать расстояние до задания отправьте геопозицию, чтобы выбрать задание напишите: 'выбор'");
         return new BotAnswer(messageList, false);
     }
 
@@ -142,7 +146,7 @@ public class Bot {
             }
             case "квест" -> {
                 user.setDialogState(SHOW_AVAILABLE_TASK);
-                messageList.add("Введите нажать квест");
+                messageList.add("Введите начать квест");
                 return new BotAnswer(messageList, false);
             }
             case "информация о квесте" -> {

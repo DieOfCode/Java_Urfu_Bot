@@ -1,10 +1,6 @@
 package com.company;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +10,7 @@ import java.util.logging.Logger;
 
 public class Quest {
     private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
-    public List<Task> allTask;
+    public List<Task> allTasks;
     public String name;
 
     public String questDescription;
@@ -23,8 +19,8 @@ public class Quest {
         super();
     }
 
-    public Quest(List<Task> allTask,String questDescription,String name){
-        this.allTask = allTask;
+    public Quest(List<Task> allTasks, String questDescription, String name){
+        this.allTasks = allTasks;
         this.questDescription = questDescription;
         this.name = name;
     }
@@ -48,9 +44,9 @@ public class Quest {
         }
     }
     public void deleteDependency(Integer taskIndex){
-        for(Task task:this.allTask){
+        for(Task task:this.allTasks){
             if(task.tasksForAccess.contains(taskIndex)){
-                task.tasksForAccess.remove(task.tasksForAccess.indexOf(taskIndex));
+                task.tasksForAccess.remove(taskIndex);
             }
         }
     }

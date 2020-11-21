@@ -1,5 +1,5 @@
 {
-  "allTask" : [ {
+  "allTasks" : [ {
     "name": "Высоцкий",
     "taskDescription" : "Сколько этажей в здании?",
     "taskLocation" : {
@@ -8,8 +8,7 @@
     },
     "distanceForOffset" : 100,
     "taskAnswer" : [ 54,53,52 ],
-    "serialNumber" : 1,
-    "complete" : false,
+    "id": 1,
     "tasksForAccess" : []
   }, {
     "name": "Плотинка",
@@ -20,8 +19,7 @@
     },
     "distanceForOffset" : 50,
     "taskAnswer" : ["Цоя","Виктора Цоя","Цой"],
-    "serialNumber" : 2,
-    "complete" : false,
+    "id": 2,
     "tasksForAccess" : [1]
   }, {
     "name": "Дом Севастьянова",
@@ -32,8 +30,7 @@
     },
     "distanceForOffset" : 100,
     "taskAnswer" : ["зелёный","зелёненький"],
-    "serialNumber" : 3,
-    "complete" : false,
+    "id": 3,
     "tasksForAccess" : [1]
   } ],
   "name" : "Про Екатеринбург",
