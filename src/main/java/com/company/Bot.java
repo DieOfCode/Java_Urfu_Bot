@@ -106,31 +106,31 @@ public class Bot {
     }
 
     private BotAnswer startTask(BotMessage inputBotMessage, ArrayList<String> messageList) {
-        if (inputBotMessage.command.toLowerCase().equals("инфо")){
+        if (inputBotMessage.command.toLowerCase().equals("информация о квесте")){
             messageList.add(user.currentTask.taskDescription);
             messageList.add("Местоположение задания");
             return new BotAnswer(messageList, true);
         }
-        if (inputBotMessage.command.toLowerCase().equals("квест инфо")){
+        if (inputBotMessage.command.toLowerCase().equals("текущий прогресс")){
             messageList.add(user.getQuestInfo(quest));
             return new BotAnswer(messageList, false);
         }
 
-        if (inputBotMessage.command.toLowerCase().equals("выбор")){
+        if (inputBotMessage.command.toLowerCase().equals("изменить задание")){
             return showAvailableTask(inputBotMessage, messageList);
         }
 
         if (inputBotMessage.coordinates != null){
-            var curDistance = Distance.getDistance(inputBotMessage.coordinates,
+            var currentDistance = Distance.getDistance(inputBotMessage.coordinates,
                     quest.allTasks.get(user.currentTaskIndex).taskLocation).intValue();
             var offset = quest.allTasks.get(user.currentTaskIndex).distanceForOffset;
-            if (offset > curDistance){
+            if (offset > currentDistance){
                 user.setDialogState(CHOICE_ACTION);
                 messageList.add("Вы подошли к месту выполнения задания\nВы готовы дать ответ или пропустите?" +
                         "чтобы ответить напишите 'Ответить', чтобы пропустить - 'Пропустить'");
                 return new BotAnswer(messageList, false);
             }
-            messageList.add(String.format("Расстояние до точки %d", curDistance));
+            messageList.add(String.format("Расстояние до точки %d", currentDistance));
             return new BotAnswer(messageList, false);
         }
         messageList.add("Для того чтобы узнать информацию о заданий напишите 'инфо', " +
@@ -145,8 +145,8 @@ public class Bot {
                 return new BotAnswer(messageList, false);
             }
             case "квест" -> {
+                messageList.add("Введите старт, чтобы подтвердить свои действия");
                 user.setDialogState(SHOW_AVAILABLE_TASK);
-                messageList.add("Введите начать квест");
                 return new BotAnswer(messageList, false);
             }
             case "информация о квесте" -> {

@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class TeleBot extends TelegramLongPollingBot {
         try {
             var sendMessage = new SendMessage();
             var sendLocation = new SendLocation();
+            var keyboard = new ReplyKeyboardMarkup();
             logger.info(update.toString());
             Bot bot;
             BotMessage inputMessage;
@@ -43,10 +45,15 @@ public class TeleBot extends TelegramLongPollingBot {
                 currentMessage = update.getEditedMessage();
             }
             bot = botsHandler.getBot(currentMessage.getChatId());
+
+
+            sendMessage.setReplyMarkup(keyboard);
             inputMessage = new BotMessage(currentMessage);
             sendMessage.setChatId(currentMessage.getChatId());
             sendLocation.setChatId(currentMessage.getChatId());
             var message = bot.replay(inputMessage);
+            var botKeyboard =new BotKeyboard(keyboard,bot);
+            botKeyboard.getKeyboard();
 
             for (String msg:message.messages) {
                 sendMessage.setText(msg);
@@ -67,7 +74,6 @@ public class TeleBot extends TelegramLongPollingBot {
     }
 
     public String getBotToken() {
-        var env = System.getenv();
-        return "1349695017:AAHcTSpiqvHsrdMMKiicvCjjIh_zm7U-x0c";
+        return System.getenv("BOT_KEY");
     }
 }
