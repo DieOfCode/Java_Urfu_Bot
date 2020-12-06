@@ -4,13 +4,15 @@ import com.fasterxml.jackson.databind.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Quest {
     private static final Logger logger = Logger.getLogger(TeleBot.class.getName());
-    public List<Task> allTasks;
+    public ArrayList<Task> allTasks = new ArrayList<>();
     public String name;
 
     public String questDescription;
@@ -19,7 +21,7 @@ public class Quest {
         super();
     }
 
-    public Quest(List<Task> allTasks, String questDescription, String name){
+    public Quest(ArrayList<Task> allTasks, String questDescription, String name){
         this.allTasks = allTasks;
         this.questDescription = questDescription;
         this.name = name;

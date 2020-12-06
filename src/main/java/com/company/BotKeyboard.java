@@ -56,7 +56,7 @@ public class BotKeyboard {
 
     }
     public void showKeyboard(){
-        throw new UnsupportedOperationException();
+        allRow.clear();
 
     }
     public void getAnswerKeyboard(){
